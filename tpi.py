@@ -372,6 +372,241 @@ def mostrar_estadisticas(paises):
     print("\n" + "=" * 50)
 
 
+# ==================== FUNCIÓN 4: ACTUALIZAR PAÍS ====================
+
+def actulizapoblacion(paises):
+    """
+    Actualiza la población de un país existente en la lista.
+    
+    Parámetro:
+        paises: lista de diccionarios con los países
+    
+    Retorna:
+        La lista modificada, o None si no se encontró el país
+    """
+    print("\n--- ACTUALIZAR POBLACIÓN ---")
+    print([pais['nombre'] for pais in paises])
+
+    # Pido el nombre del país y valido que sea solo letras
+    while True:
+        paiseleccion = input("Elija un pais para actualizar su poblacion: ").strip().lower()
+        if not paiseleccion.replace(' ', '').isalpha() or paiseleccion == '':
+            print('❌ Error: Ingresó caracteres no válidos')
+        else:
+            break
+
+    encontrado = False
+
+    for pais in paises:
+        if paiseleccion == pais['nombre'].lower():
+            print(f"Población actual de {pais['nombre']}: {pais['poblacion']:,} habitantes")
+
+            # Valido que la nueva población sea un entero no negativo
+            while True:
+                try:
+                    nuevapoblacion = int(input("Ingrese la nueva población: "))
+                    # Validación para no permitir números menores a 0
+                    if nuevapoblacion < 0:
+                        print("❌ Error: el número no puede ser negativo")
+                        continue  # Vuelve al inicio del while
+                    break  # Si es un número válido y mayor o igual a 0, sale del ciclo
+                except ValueError:
+                    print("❌ Error: ingrese solo números enteros")
+
+            pais['poblacion'] = nuevapoblacion
+            encontrado = True
+            break
+
+    if not encontrado:
+        print(f"❌ Error: no se encontró el país '{paiseleccion}'")
+        return None
+
+    print(f"✅ Población actualizada con éxito.")
+    return paises
+
+
+def actualizasuperficie(paises):
+    """
+    Actualiza la superficie de un país existente en la lista.
+    
+    Parámetro:
+        paises: lista de diccionarios con los países
+    
+    Retorna:
+        La lista modificada, o None si no se encontró el país
+    """
+    print("\n--- ACTUALIZAR SUPERFICIE ---")
+    print([pais['nombre'] for pais in paises])
+
+    # Pido el nombre del país y valido que sea solo letras
+    while True:
+        paiseleccion = input("Elija un pais para actualizar su superficie: ").strip().lower()
+        if not paiseleccion.replace(' ', '').isalpha() or paiseleccion == '':
+            print('❌ Error: Ingresó caracteres no válidos')
+        else:
+            break
+
+    encontrado = False
+
+    for pais in paises:
+        if paiseleccion == pais['nombre'].lower():
+            print(f"Superficie actual de {pais['nombre']}: {pais['superficie']:,} km2")
+
+            # Validación para no permitir números menores o iguales a 0
+            while True:
+                try:
+                    nuevasuperficie = int(input("Ingrese la nueva superficie (km2): "))
+                    if nuevasuperficie <= 0:
+                        print("❌ Error: la superficie debe ser un número positivo")
+                        continue
+                    break
+                except ValueError:
+                    print("❌ Error: ingrese solo números enteros")
+
+            pais['superficie'] = nuevasuperficie
+            encontrado = True
+            break
+
+    if not encontrado:
+        print(f"❌ Error: no se encontró el país '{paiseleccion}'")
+        return None
+
+    print(f"✅ Superficie actualizada con éxito.")
+    return paises
+
+
+# ==================== FUNCIÓN 5: FILTRAR PAÍSES ====================
+
+def filtrar_paises(paises):
+    """
+    Filtra países según un criterio elegido por el usuario:
+    por continente, rango de población o rango de superficie.
+    
+    Parámetro:
+        paises: lista de diccionarios con los países
+    
+    Retorna:
+        Lista de países que cumplen el criterio
+    """
+    print("\n--- FILTRAR PAÍSES ---")
+    print("1. Continente")
+    print("2. Rango de población")
+    print("3. Rango de superficie")
+
+    # Valido que la opción sea 1, 2 o 3
+    while True:
+        opcion = input("Ingrese una opción (1-3): ").strip()
+        if opcion in ('1', '2', '3'):
+            break
+        print("❌ Error: ingrese 1, 2 o 3")
+
+    resultado = []
+
+    if opcion == '1':
+        # Filtro por continente, valido que sea solo letras
+        while True:
+            continente = input("Ingrese el continente: ").strip().lower()
+            if continente == '' or not continente.replace(' ', '').isalpha():
+                print("❌ Error: ingrese solo letras")
+                continue
+            break
+        for pais in paises:
+            if pais['continente'].lower() == continente:
+                resultado.append(pais)
+
+    elif opcion == '2':
+        # Filtro por rango de población
+        while True:
+            try:
+                minimo = int(input("Ingrese la población mínima: "))
+                maximo = int(input("Ingrese la población máxima: "))
+                if minimo > maximo:
+                    print("❌ Error: el mínimo no puede ser mayor al máximo")
+                    continue
+                break
+            except ValueError:
+                print("❌ Error: ingrese solo números enteros")
+        for pais in paises:
+            if minimo <= pais['poblacion'] <= maximo:   # poblacion ya es int
+                resultado.append(pais)
+
+    elif opcion == '3':
+        # Filtro por rango de superficie
+        while True:
+            try:
+                minimo = int(input("Ingrese la superficie mínima: "))
+                maximo = int(input("Ingrese la superficie máxima: "))
+                if minimo > maximo:
+                    print("❌ Error: el mínimo no puede ser mayor al máximo")
+                    continue
+                break
+            except ValueError:
+                print("❌ Error: ingrese solo números enteros")
+        for pais in paises:
+            if minimo <= pais['superficie'] <= maximo:  # superficie ya es int
+                resultado.append(pais)
+
+    if resultado:
+        print(f"\n🔍 {len(resultado)} país(es) encontrado(s):")
+        for pais in resultado:
+            print(f"   • {pais['nombre']} | Población: {pais['poblacion']:,} | Superficie: {pais['superficie']:,} km2 | {pais['continente']}")
+    else:
+        print("❌ No se encontraron países con ese criterio.")
+
+    return resultado
+
+
+# ==================== FUNCIÓN 6: ORDENAR PAÍSES ====================
+
+def ordenar_paises(paises):
+    """
+    Ordena la lista de países según un criterio y dirección elegidos.
+    
+    Parámetro:
+        paises: lista de diccionarios con los países
+    
+    Retorna:
+        Nueva lista ordenada según el criterio elegido
+    """
+    print("\n--- ORDENAR PAÍSES ---")
+    print("1. Nombre")
+    print("2. Población")
+    print("3. Superficie")
+
+    # Valido que el criterio sea 1, 2 o 3
+    while True:
+        opcion = input("Ingrese una opción (1-3): ").strip()
+        if opcion in ('1', '2', '3'):
+            break
+        print("❌ Error: ingrese 1, 2 o 3")
+
+    print("\n¿En qué orden?")
+    print("1. Ascendente")
+    print("2. Descendente")
+
+    # Valido que el orden sea 1 o 2
+    while True:
+        orden = input("Ingrese una opción (1-2): ").strip()
+        if orden in ('1', '2'):
+            break
+        print("❌ Error: ingrese 1 o 2")
+
+    descendente = orden == '2'   # True si eligió descendente, False si ascendente
+
+    if opcion == '1':
+        resultado = sorted(paises, key=lambda p: p['nombre'].lower(), reverse=descendente)  # key: p['nombre'] (en minúsculas para ignorar mayúsculas) | reverse: True=descendente, False=ascendente
+    elif opcion == '2':
+        resultado = sorted(paises, key=lambda p: p['poblacion'], reverse=descendente)       # key: p['poblacion'] (ya es int, comparación numérica directa) | reverse: True=descendente, False=ascendente
+    elif opcion == '3':
+        resultado = sorted(paises, key=lambda p: p['superficie'], reverse=descendente)      # key: p['superficie'] (ya es int, comparación numérica directa) | reverse: True=descendente, False=ascendente
+
+    print("\n📋 Países ordenados:")
+    for pais in resultado:
+        print(f"   • {pais['nombre']} | Población: {pais['poblacion']:,} | Superficie: {pais['superficie']:,} km2 | {pais['continente']}")
+
+    return resultado
+
+
 # ==================== MENÚ PRINCIPAL ====================
 
 def mostrar_menu():
@@ -383,9 +618,12 @@ def mostrar_menu():
     print("🌍 SISTEMA DE GESTION DE PAISES 🌍")
     print("=" * 50)
     print("1. Agregar pais")
-    print("2. Buscar pais por nombre")
-    print("3. Mostrar estadisticas")
-    print("4. Guardar y salir")
+    print("2. Actualizar datos de un pais (Población / Superficie)")
+    print("3. Buscar pais por nombre")
+    print("4. Filtrar paises")
+    print("5. Ordenar paises")
+    print("6. Mostrar estadisticas")
+    print("7. Guardar y salir")
     print("-" * 50)
 
 
@@ -404,23 +642,48 @@ def main():
         mostrar_menu()
         
         # Pido la opción al usuario y elimino espacios alrededor
-        opcion = input("Seleccione una opcion (1-4): ").strip()
+        opcion = input("Seleccione una opcion (1-7): ").strip()
         
         # ===== OPCIÓN 1: AGREGAR PAÍS =====
         if opcion == "1":
             agregar_pais(paises)           # Llamo a mi función
             guardar_datos(paises)          # Guardo automáticamente después de agregar
         
-        # ===== OPCIÓN 2: BUSCAR PAÍS =====
+        # ===== OPCIÓN 2: ACTUALIZAR DATOS =====
         elif opcion == "2":
+            # Submenu para elegir qué dato actualizar
+            print("\n¿Qué dato desea actualizar?")
+            print("1. Población")
+            print("2. Superficie")
+            while True:
+                sub = input("Ingrese una opción (1-2): ").strip()
+                if sub in ('1', '2'):
+                    break
+                print("❌ Opción inválida. Ingrese 1 o 2.")
+            if sub == '1':
+                actulizapoblacion(paises)      # Actualizo la población
+            else:
+                actualizasuperficie(paises)    # Actualizo la superficie
+            guardar_datos(paises)              # Guardo automáticamente
+
+        # ===== OPCIÓN 3: BUSCAR PAÍS =====
+        elif opcion == "3":
             buscar_pais(paises)            # Llamo a mi función de búsqueda
         
-        # ===== OPCIÓN 3: MOSTRAR ESTADÍSTICAS =====
-        elif opcion == "3":
+        # ===== OPCIÓN 4: FILTRAR PAÍSES =====
+        elif opcion == "4":
+            filtrar_paises(paises)         # Llamo a mi función de filtrado
+        
+        # ===== OPCIÓN 5: ORDENAR PAÍSES =====
+        elif opcion == "5":
+            ordenar_paises(paises)         # Llamo a mi función de ordenamiento
+
+        # ===== OPCIÓN 6: MOSTRAR ESTADÍSTICAS =====
+        elif opcion == "6":
             mostrar_estadisticas(paises)   # Llamo a mi función de estadísticas
         
-        # ===== OPCIÓN 4: GUARDAR Y SALIR =====
-        elif opcion == "4":
+        # ===== OPCIÓN 7: GUARDAR Y SALIR =====
+        elif opcion == "7":
             print("\n📀 Guardando datos...")
             
             # Intento guardar los datos
@@ -433,7 +696,7 @@ def main():
         
         # ===== OPCIÓN INVÁLIDA =====
         else:
-            print("❌ Opcion invalida. Por favor, seleccione 1, 2, 3 o 4.")
+            print("❌ Opcion invalida. Por favor, seleccione entre 1 y 7.")
 
 
 # ==================== PUNTO DE ENTRADA DEL PROGRAMA ====================
