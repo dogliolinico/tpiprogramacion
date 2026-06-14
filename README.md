@@ -6,7 +6,7 @@ Video de presentación
 https://youtu.be/BwJre1pwz3Q
 
 Informe
-tpiprogramacion.pdf
+TpiProgramacion.pdf
 
 Descripción
 Aplicación de consola en Python para administrar un dataset de países del mundo. Los datos se persisten automáticamente en un archivo CSV (paises.csv) al finalizar cada operación de escritura.
