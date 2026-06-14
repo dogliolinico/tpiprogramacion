@@ -3,6 +3,7 @@ Trabajo Práctico Integrador — Programación I | UTN
 Repositorio
 https://github.com/dogliolinico/tpiprogramacion
 Video de presentación
+https://youtu.be/BwJre1pwz3Q
 
 Informe
 tpiprogramacion.pdf
